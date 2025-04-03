@@ -101,13 +101,13 @@ def CreateCurveFromEdge():
 def MakeShape(name, boneName, jointNum, boneSide, ctrlShape, ctrlColor):
 
     if ctrlShape == "Full Circle":
-        newCircle = pm.circle(n = "ctrl_" + name + boneName + str(jointNum) + boneSide, nr = (0,0,1), c=(0,0,0))
-        newGroup = pm.group(newCircle, n = 'ctrl_' + name + boneName + str(jointNum) + boneSide + '_offset')
+        newCircle = pm.circle(n = f"ctrl_{name}_{boneName}{str(jointNum)}_boneSide", nr = (0,0,1), c=(0,0,0))
+        newGroup = pm.group(newCircle, n = f'ctrl_{name}_{boneName}{str(jointNum)}_{boneSide}_offset')
 
         return(newCircle, newGroup)
 
     elif ctrlShape == "Half Circle":
-        newCircle = pm.circle(n = "ctrl_" + name + boneName + str(jointNum) + boneSide, nr = (0,0,1), c=(0,0,0))
+        newCircle = pm.circle(n = f"ctrl_{name}_{boneName}{str(jointNum)}_{boneSide}", nr = (0,0,1), c=(0,0,0))
         pm.select(newCircle[0] + '.cv[3:7]')
 
         pm.scale(1, 1, 1e-05, relative = True, pivot = (0, 0, 0.5))
@@ -115,29 +115,29 @@ def MakeShape(name, boneName, jointNum, boneSide, ctrlShape, ctrlColor):
         pm.select(newCircle)
         pm.makeIdentity(newCircle[0], apply = True) #makeIdentity = freeze transformations
 
-        newGroup = pm.group(empty = True,  n = 'ctrl_' + name + boneName + str(jointNum) + boneSide + '_offset')
+        newGroup = pm.group(empty = True,  n = f'ctrl_{name}_{boneName}{str(jointNum)}_{boneSide}_offset')
 
         pm.parent(newCircle, newGroup)
 
         return(newCircle, newGroup)
     
     elif ctrlShape == "Cube":
-        newCircle = pm.curve(n = "ctrl_" + name + boneName + str(jointNum) + boneSide,  degree = 1, point = [(-1,0,1), (1,0,1), (1,0,-1), (-1, 0, -1), (-1, 0, 1), (-1, -2, 1), (1, -2 , 1), (1, 0, 1), (1, 0, -1),(1, -2,-1),  (-1, -2, -1), (-1, 0, -1), (-1, 0, 1), (-1, -2, 1),(-1, -2, -1),(1, -2, -1), (1, -2, 1)]) 
+        newCircle = pm.curve(n = f"ctrl_{name}_{boneName}{str(jointNum)}_boneSide",  degree = 1, point = [(-1,0,1), (1,0,1), (1,0,-1), (-1, 0, -1), (-1, 0, 1), (-1, -2, 1), (1, -2 , 1), (1, 0, 1), (1, 0, -1),(1, -2,-1),  (-1, -2, -1), (-1, 0, -1), (-1, 0, 1), (-1, -2, 1),(-1, -2, -1),(1, -2, -1), (1, -2, 1)]) 
     
         pm.setAttr(newCircle + ".translate", 0, 1, 0)
 
         pm.makeIdentity(newCircle, apply = True) 
         pm.xform(newCircle, centerPivots = True)
 
-        newGroup = pm.group(newCircle,  n = 'ctrl_' + name + boneName + str(jointNum) + boneSide + '_offset') 
+        newGroup = pm.group(newCircle,  name = f'ctrl_{name}_{boneName}{str(jointNum)}_{boneSide}_offset') 
 
         return(newCircle, newGroup)
 
     elif ctrlShape == "3D Circle":
         # making the 3 circles and turning them into a 3D circle
-        newCircle = pm.circle(n = "ctrl_" + name + boneName + str(jointNum) + boneSide, nr = (0,0,1), c=(0,0,0))
-        circle2 = pm.circle(name = name + boneName + "Larry" + str(jointNum) + boneSide)
-        circle3 = pm.circle(name = name + boneName + "Joe" + str(jointNum) + boneSide)
+        newCircle = pm.circle(name = f"ctrl_{name}_{boneName}{str(jointNum)}_{boneSide}", nr = (0,0,1), c=(0,0,0))
+        circle2 = pm.circle(name = f"{name}{boneName}Larry{str(jointNum)}{boneSide}")
+        circle3 = pm.circle(name = f"{name}{boneName}Joe{str(jointNum)}{boneSide}")
 
         pm.select(circle2)
         pm.setAttr(circle2[0] +  ".rotate", 0, 90, 0)
@@ -147,36 +147,36 @@ def MakeShape(name, boneName, jointNum, boneSide, ctrlShape, ctrlColor):
         pm.setAttr(circle3[0] + ".rotate", 90, 0, 0)
         pm.makeIdentity(circle3[0], apply = True)
 
-        pm.parent(name + boneName + "Joe" + str(jointNum) + boneSide +  "Shape", name + boneName +  "Larry" + str(jointNum) + boneSide + "Shape", newCircle, relative = True, shape = True)
-        pm.delete(name + boneName +  "Joe" + str(jointNum) + boneSide, name + boneName + "Larry" + str(jointNum) +  boneSide)
+        pm.parent(f"{name}{boneName}Joe{str(jointNum)}{boneSide}Shape", f"{name}{boneName}Larry{str(jointNum)}{boneSide}Shape", newCircle, relative = True, shape = True)
+        pm.delete(f"{name}{boneName}Joe{str(jointNum)}{boneSide}", f"{name}{boneName}Larry{str(jointNum)}{boneSide}")
         pm.select(newCircle)
 
-        newGroup = pm.group(newCircle, name = 'ctrl_' + name + boneName + str(jointNum) + boneSide + '_offset')
+        newGroup = pm.group(newCircle, name = f'ctrl_{name}_{boneName}{str(jointNum)}_{boneSide}_offset')
 
         return(newCircle, newGroup)
     
     elif ctrlShape == "Pyramid":
-        newCircle  = cmds.curve(name = 'ctrl_' + name + boneName + str(jointNum) + boneSide, degree = 1, point = [(2, 3, 2), (-2, 3, 2), (-2, 3, -2), (2, 3, -2), (0, 0, 0), (-2, 3, 2), (2, 3, 2), (0, 0, 0), (-2, 3, -2), (2, 3, -2), (2, 3, 2)])
+        newCircle  = cmds.curve(name = f'ctrl_{name}_{boneName}{str(jointNum)}_{boneSide}', degree = 1, point = [(2, 3, 2), (-2, 3, 2), (-2, 3, -2), (2, 3, -2), (0, 0, 0), (-2, 3, 2), (2, 3, 2), (0, 0, 0), (-2, 3, -2), (2, 3, -2), (2, 3, 2)])
 
-        newGroup = cmds.group(empty = True, name = 'ctrl_' + boneName + str(jointNum) + boneSide + '_offset')
+        newGroup = cmds.group(empty = True, name = f'ctrl_{boneName}{str(jointNum)}_{boneSide}_offset')
 
         cmds.parent(newCircle, newGroup)
 
         return(newCircle, newGroup)
 
     elif ctrlShape == "Arrow Cross":
-        newCircle = cmds.curve(name = 'ctrl_' + name + boneName + str(jointNum) + boneSide, degree = 1, point = [(-1, 0, -1), (-1, 0, -3), (-2, 0, -3), (0, 0, -5), (2, 0, -3), (1, 0, -3), (1, 0, -1),(3, 0, -1), (3, 0, -2), (5, 0, 0), (3, 0, 2), (3, 0, 1), (1, 0, 1),(1, 0, 3), (2, 0, 3), (0, 0, 5), (-2, 0, 3), (-1, 0, 3), (-1, 0, 1), (-3, 0, 1), (-3, 0, 2), (-5, 0, 0), (-3, 0, -2), (-3, 0, -1), (-1, 0, -1)])
+        newCircle = cmds.curve(name = f'ctrl_{name}_{boneName}{str(jointNum)}_{boneSide}', degree = 1, point = [(-1, 0, -1), (-1, 0, -3), (-2, 0, -3), (0, 0, -5), (2, 0, -3), (1, 0, -3), (1, 0, -1),(3, 0, -1), (3, 0, -2), (5, 0, 0), (3, 0, 2), (3, 0, 1), (1, 0, 1),(1, 0, 3), (2, 0, 3), (0, 0, 5), (-2, 0, 3), (-1, 0, 3), (-1, 0, 1), (-3, 0, 1), (-3, 0, 2), (-5, 0, 0), (-3, 0, -2), (-3, 0, -1), (-1, 0, -1)])
 
-        newGroup = cmds.group(empty = True, name = 'ctrl_' + boneName + str(jointNum) + boneSide + '_offset')
+        newGroup = cmds.group(empty = True, name = f'ctrl_{boneName}{str(jointNum)}_{boneSide}_offset')
 
         cmds.parent(newCircle, newGroup)
 
         return(newCircle, newGroup)
 
     elif ctrlShape == "Root Arrows":
-        newCircle = cmds.curve(n = 'ctrl_' + name + boneName + str(jointNum) + boneSide, degree = 1, point = [(-4, 0, -1), (-3, 0, -3), (-1, 0, -4), (-1, 0, -6), (-2, 0, -6), (0, 0, -8), (2, 0, -6), (1, 0, -6), (1, 0, -6), (1, 0, -4), (3, 0, -3), (4, 0, -1), (6, 0, -1), (6, 0, -2), (8, 0, 0), (6, 0, 2), (6, 0, 1), (4, 0, 1), (3, 0, 3), (1, 0, 4), (1, 0, 6), (2, 0, 6), (0, 0, 8), (-2, 0, 6), (-1, 0, 6), (-1, 0, 4),(-3, 0, 3), (-4, 0, 1), (-6, 0, 1), (-6, 0, 2), (-8, 0, 0), (-6, 0, -2), (-6, 0, -1), (-4, 0, -1)])
+        newCircle = cmds.curve(name = f'ctrl_{name}_{boneName}{str(jointNum)}_{boneSide}', degree = 1, point = [(-4, 0, -1), (-3, 0, -3), (-1, 0, -4), (-1, 0, -6), (-2, 0, -6), (0, 0, -8), (2, 0, -6), (1, 0, -6), (1, 0, -6), (1, 0, -4), (3, 0, -3), (4, 0, -1), (6, 0, -1), (6, 0, -2), (8, 0, 0), (6, 0, 2), (6, 0, 1), (4, 0, 1), (3, 0, 3), (1, 0, 4), (1, 0, 6), (2, 0, 6), (0, 0, 8), (-2, 0, 6), (-1, 0, 6), (-1, 0, 4),(-3, 0, 3), (-4, 0, 1), (-6, 0, 1), (-6, 0, 2), (-8, 0, 0), (-6, 0, -2), (-6, 0, -1), (-4, 0, -1)])
 
-        newGroup = cmds.group(newCircle, name = 'ctrl_' + boneName + str(jointNum) + boneSide + '_offset')
+        newGroup = cmds.group(newCircle, name = f'ctrl_{boneName}{str(jointNum)}_{boneSide}_offset')
 
         return(newCircle, newGroup)
 
@@ -258,16 +258,21 @@ def CreateControlPanel():
 
     ctrlPanelSizeX = cmds.textFieldGrp('panelX', query = True, text = True)
     ctrlPanelSizeY = cmds.textFieldGrp('panelY', query = True, text = True) 
+    curPanel = cmds.textFieldGrp('curPanel', query = True, text = True)
 
-    newPanel = cmds.curve(degree = 1, name = 'ctrl_' + str(charName) + '_panel', point = [(-1, 1, 0), (1, 1, 0), (1, -1, 0), (-1, -1, 0), (-1, 1, 0)])
-    newPanelInside = cmds.curve(degree = 1, name = 'ctrl_' + str(charName) + '_panel_Inside', point = [(-1, 1, 0), (1, 1, 0), (1, -1, 0), (-1, -1, 0), (-1, 1, 0)])
+    newPanel = cmds.curve(degree = 1, name = f'ctrl_{str(charName)}_panel', point = [(-1, 1, 0), (1, 1, 0), (1, -1, 0), (-1, -1, 0), (-1, 1, 0)])
+    newPanelInside = cmds.curve(degree = 1, name = f"ctrl_{str(charName)}_panel_Inside", point = [(-1, 1, 0), (1, 1, 0), (1, -1, 0), (-1, -1, 0), (-1, 1, 0)])
 
     # moving the text point to the corner of the panel 
-    textPoint = cmds.group(empty = True, name = str(charName) + '_textPoint_ControlPanel')
+    # we are also making this text point unselectable, thus making the text unselectable as well.
+    # that is unless we select them in the outliner
+    textPoint = cmds.group(empty = True, name = f"ctrl_{str(charName)}_textPoint_ControlPanel")
+    pm.setAttr(textPoint + ".overrideEnabled", 1)
+    pm.setAttr(textPoint + ".overrideDisplayType", 2)
     cmds.xform(translation = (-1, 1, 0))
     cmds.parent(textPoint, newPanelInside)
 
-    tributeGroup = cmds.group(newPanel, newPanelInside, name = 'ctrl_' + str(charName) + '_offset') 
+    tributeGroup = cmds.group(newPanel, newPanelInside, name = f'ctrl_{str(charName)}_tribute_offset') 
 
     # scale the innerPanel to the size we pass it
     cmds.select(newPanelInside)
@@ -301,107 +306,181 @@ def CreateControlPanel():
     cmds.delete(newPanelInside)
 
     cmds.rename('ctrl_' + str(charName) + '_panel')
-    panelGroup = cmds.group(combinedPanel[0], name = 'ctrl_' + str(charName) + '_panel_offset')
+    panelGroup = cmds.group(combinedPanel[0], name = f'ctrl_{str(charName)}_panel_offset')
 
     # adding the text
     if str(charName) != "":
-        panelName = cmds.textCurves(font = "Liberation Mono", name = 'ctrl_' + str(charName) + '_panel_text', text = str(charName)) 
+        panelName = cmds.textCurves(font = "Liberation Mono", name = f'ctrl_{str(charName)}_panel_text', text = str(charName)) 
+        pm.setAttr(panelName[0] + ".overrideEnabled", 1)
+        pm.setAttr(panelName[0] + ".overrideDisplayType", 2)
         pm.matchTransform(panelName, textPoint) 
 
-        cmds.parent(panelName, textPoint)
+        pm.parent(panelName, textPoint)
 
         cmds.parent(textPoint, combinedPanel[0])
 
         print(panelName)
 
-        #combining the text into one curve
+        # making the text shapes unselectable and only manipulatable via the empties
+        # panelLetters = cmds.listRelatives(panelName, shapes = True, fullPath = True)
 
-
+        # print(panelLetters)
 
 # create a slider
 def CreateSlider():
     charName = cmds.textFieldGrp('aName', query = True, text = True)
     functionName = cmds.textFieldGrp('ctrlFunction', query = True, text = True)
+    curPanel = cmds.textFieldGrp('curPanel', query = True, text = True)
 
-    newSliderBorder = cmds.curve(degree = 1, name = "ctrl_" + str(charName) + str(functionName) + '_slider_border', point = [(-0.5, 0.5, 0), (4, 0.5, 0), (4, -0.5, 0), (-0.5, -0.5, 0), (-0.5, 0.5, 0)])
-    newSliderControl = cmds.curve(degree = 1, name = "ctrl_" + str(charName) + str(functionName) + 'slider', point = [(-0.35, 0.35, 0), (0.35, 0.35, 0), (0.35, -0.35, 0,), (-0.35, -0.35, 0), (-0.35, 0.35, 0)])
+    newSliderBorder = cmds.curve(degree = 1, name = f"ctrl_{str(charName)}_{str(functionName)}_slider_border", point = [(-0.5, 0.5, 0), (4, 0.5, 0), (4, -0.5, 0), (-0.5, -0.5, 0), (-0.5, 0.5, 0)])
+    newSliderControl = cmds.curve(degree = 1, name = f"ctrl_{str(charName)}_{str(functionName)}_slider", point = [(-0.35, 0.35, 0), (0.35, 0.35, 0), (0.35, -0.35, 0,), (-0.35, -0.35, 0), (-0.35, 0.35, 0)])
     
-    cmds.group(newSliderControl, newSliderBorder, name = 'ctrl_' + str(charName) + str(functionName) + 'slider_offset')
-    newSliderControlGroup = cmds.group(newSliderControl, name = 'ctrl_' + str(charName) + str(functionName) + 'slider_control_offset')
+    newSliderGroup = cmds.group(newSliderControl, newSliderBorder, name = f"ctrl_{str(charName)}_{str(functionName)}_slider_offset")
+    newSliderControlGroup = cmds.group(newSliderControl, name = f'ctrl_{str(charName)}_{str(functionName)}_slider_control_offset')
+    newSliderBorderGroup = cmds.group(empty = True, name = f'ctrl_{str(charName)}_{str(functionName)}_slider_border_offset')
+
+    # move the border group to the corner of the slider so we can scale it from side to side
+    # then we can parent it to the group and edit it further 
+    cmds.select(newSliderBorderGroup)
+    cmds.xform(translation = (-0.5, 0.5, 0))
+    cmds.parent(newSliderBorder, newSliderBorderGroup)
+
+    # make the border of the slider unselectable
+    pm.setAttr(newSliderBorderGroup + ".overrideEnabled", 1)
+    pm.setAttr(newSliderBorderGroup + ".overrideDisplayType", 2)
 
     # change the color of the slider to yellow
     pm.setAttr(newSliderControlGroup + ".overrideEnabled", 1)
     pm.setAttr(newSliderControlGroup + ".overrideColor", 17)
+   
+    # if there is a name for our slider, we can scale it up
+    if functionName != "" :
+        sliderNameText = cmds.textCurves(font = "Liberation Mono", name = f"ctrl_{str(charName)}_{str(functionName)}_slider_text", text = str(functionName))
+        pm.setAttr(sliderNameText[0] + ".overrideEnabled", 1)
+        pm.setAttr(sliderNameText[0] + ".overrideDisplayType", 2)
+        pm.matchTransform(sliderNameText, newSliderBorderGroup)
 
-    # add the name of the function to the top of the slider
+        pm.parent(sliderNameText, newSliderGroup)
+
+    # we can parent the slider control group to the new slider group
+    cmds.parent(newSliderControlGroup, newSliderBorderGroup, newSliderGroup)
+
+    print(curPanel)
+
+    # if there is text in the curPanel, we wil match transform to the panel in curPanel
+    if curPanel != "":
+        pm.matchTransform(newSliderGroup, curPanel)
+        pm.parent(newSliderGroup, curPanel)
 
 def CreateUpDownSlider():
-    pass
+    print("work in progress") 
 
 # create a XY Panel
 def CreateXYPanel():
     charName = cmds.textFieldGrp('aName', query = True, text = True)
     functionName = cmds.textFieldGrp('ctrlFunction', query = True, text = True)
 
-    newXYPanelBorder = cmds.curve(degree = 1, name = "ctrl_" + str(charName) + str(functionName) + "XYPanel_Border", point = [(-2, 2, 0), (2, 2, 0), (2, -2, 0), (-2, -2, 0), (-2, 2, 0)])
-    newXYPanelControl = cmds.curve(degree = 1, name = "ctrl_" + str(charName) + str(functionName) + "XYPanel_Control", point = [(-0.35, 0.35, 0), (0.35, 0.35, 0), (0.35, -0.35, 0), (-0.35, -0.35, 0), (-0.35, 0.35, 0)]) 
+    newXYPanelBorder = cmds.curve(degree = 1, name = f"ctrl_{str(charName)}_{str(functionName)}_XYPanel_Border", point = [(-2, 2, 0), (2, 2, 0), (2, -2, 0), (-2, -2, 0), (-2, 2, 0)])
+    newXYPanelControl = cmds.curve(degree = 1, name = f"ctrl_{str(charName)}_{str(functionName)}_XYPanel_Control", point = [(-0.35, 0.35, 0), (0.35, 0.35, 0), (0.35, -0.35, 0), (-0.35, -0.35, 0), (-0.35, 0.35, 0)]) 
 
-    cmds.group(newXYPanelBorder, newXYPanelControl, name = "ctrl_" + str(charName) + "XYPanel_offset")
-    newXYPanelControlGroup = cmds.group(newXYPanelControl, name = 'ctrl_' + str(charName) +  str(functionName) + 'slider_XYPanel_offset')
+    newXYPanelGroup = cmds.group(newXYPanelBorder, newXYPanelControl, name = f"ctrl_{str(charName)}_{str(functionName)}_XYPanel_offset")
+    newXYPanelBorderGroup = cmds.group(empty = True, name = f"ctrl_{str(charName)}_{str(functionName)}_XYPanel_Border_osffet")
+    newXYPanelControlGroup = cmds.group(newXYPanelControl, name = f'ctrl_{str(charName)}_{str(functionName)}_slider_XYPanel_offset')
+
+    cmds.select(newXYPanelBorderGroup)
+    cmds.xform(translation = (-2, 2, 0))
+    cmds.parent(newXYPanelBorder, newXYPanelBorderGroup)
+
+    # make the border unselectable
+    pm.setAttr(newXYPanelBorderGroup + ".overrideEnabled", 1)
+    pm.setAttr(newXYPanelBorderGroup + ".overrideDisplayType", 2)
 
     # change the color of the xy panel to Yellow
     pm.setAttr(newXYPanelControlGroup + ".overrideEnabled", 1)
     pm.setAttr(newXYPanelControlGroup + ".overrideColor", 17)
 
     # add the name of the function to the top of the XY Panel
+    if functionName != "":
+        xYPanelText = cmds.textCurves(font = "Liberation Mono", name = f"ctrl_{str(charName)}_{str(functionName)}_XYPanel_Text", text = str(functionName))
+        pm.setAttr(xYPanelText[0] + ".overrideEnabled", 1)
+        pm.setAttr(xYPanelText[0] + ".overrideDisplayType", 2)
+        pm.xform(scale = (0.6, 0.6, 0.6))
+        pm.matchTransform(xYPanelText, newXYPanelBorderGroup)
+
+        pm.parent(xYPanelText, newXYPanelBorderGroup)
+
+    cmds.parent(newXYPanelBorderGroup, newXYPanelControlGroup, newXYPanelGroup)
+
+# a new feature I want to make
+# a control preview mode where we can interactivley rotate and scale our contorls before we spawn them into the world. 
+# can be done for multiple controls at once
+# upon create a control
+#   - make a shape we can transform about
+#   - a window pops up that has a simple okay and cancel button with text saying EDIT MODE
+#       - write this window in QT as a means to learn it
+#       - matter of fact, just lean QT reguardless
+#   - if cancel is selected, then the proxy shape is deleted and the EDIT MODE window disapears
+#   - after we position our shape, we hit the okay button
+#   - the shape then is parented to the joint we want or is positioned in the place we want
+# - ideas as to how to achieve this
+#   - a proxy shape or proxy shapes are spawned and we can move about
+#   - we dont even need an offset group
+#   - after clicking okay
+#       - the proxy shape is duplicated and history is deleted and transforms applied
+#       - an empty group is spawned and it inherits the transform values of the proxy shape maybe except for scale
+#       - the shape is parented to the empty group  
+#       - repeat for each of the controls
+#       - after completing the okay button disapears
+def ShapePreviewMode():
+    pass
 
 # building the window
 def CreateWindow():
     WindowID = "ChrisFavoriteTools"
 
-    if pm.window(WindowID, exists = True):
-        pm.deleteUI(WindowID)
+    if cmds.window(WindowID, exists = True):
+        cmds.deleteUI(WindowID)
     
-    pm.window(WindowID, title = "Toolchest", w = 100, h = 200, mnb = 0, mxb = 0) 
+    cmds.window(WindowID, title = "Toolchest", width = 100, height = 200, minimizeButton = False, maximizeButton = False) 
    
-    mainLayout = pm.formLayout(nd = 100)
+    mainLayout = cmds.formLayout(numberOfDivisions = 100)
 
     #The Control Creation Tool
-    title1 = pm.text(l = "Nurbs Control Creation Tool", fn = 'obliqueLabelFont')
+    title1 = cmds.text(label = "Nurbs Control Creation Tool", font = 'obliqueLabelFont')
     
     #layout of the UI
-    sep1 = pm.separator(h = 5)
-    aName = pm.textFieldGrp('aName', l = 'Character Name = ', width = 5)
-    bName = pm.textFieldGrp('bName', l = 'Bone Names = ', width = 5)
-    pm.separator(h = 10)
+    sep1 = cmds.separator(height = 5)
+    aName = cmds.textFieldGrp('aName',label = 'Character Name = ', width = 5)
+    bName = cmds.textFieldGrp('bName',label = 'Bone Names = ', width = 5)
+    cmds.separator(height = 10)
 
     #Determining left or right side
     sep2 = pm.separator(h = 5)
-    sideMenu = pm.optionMenu("sideMenu", l = "Which side?", h = 20, ann = "Left Or Right?")
-    pm.menuItem(l = "Center")
-    pm.menuItem(l = "Left")
-    pm.menuItem(l = "Right")
+    sideMenu = pm.optionMenu("sideMenu", label = "Which side?", height = 20, annotation = "Left Or Right?")
+    cmds.menuItem(label = "Center")
+    cmds.menuItem(label = "Left")
+    cmds.menuItem(label = "Right")
 
-    colorMenu = pm.optionMenu("colorObject", l = "Color of Control", h = 20, ann = "What Color do we want the new Control to be")
-    pm.menuItem(l = "Yellow")
-    pm.menuItem(l = "Green")
-    pm.menuItem(l = "Red")
-    pm.menuItem(l = "Blue")
-    pm.menuItem(l = "Magenta")
-    pm.menuItem(l = "Tan")
+    colorMenu = cmds.optionMenu("colorObject", label = "Color of Control", height = 20, annotation = "What Color do we want the new Control to be")
+    cmds.menuItem(label = "Yellow")
+    cmds.menuItem(label = "Green")
+    cmds.menuItem(label = "Red")
+    cmds.menuItem(label = "Blue")
+    cmds.menuItem(label = "Magenta")
+    cmds.menuItem(label = "Tan")
 
-    shapeMenu = pm.optionMenu("shapeOfObject", label = "Shape of control", height = 20, annotation = "What shape do we want the control to be")
-    pm.menuItem(label = "Full Circle")
-    pm.menuItem(label = "Half Circle")
-    pm.menuItem(label = "3D Circle")
-    pm.menuItem(label = "Cube")
-    pm.menuItem(label = "Pyramid")
-    pm.menuItem(label = "Arrow Cross")
-    pm.menuItem(label = "Root Arrows")
-    pm.menuItem(label = "Up and Down Arrows")
+    shapeMenu = cmds.optionMenu("shapeOfObject", label = "Shape of control", height = 20, annotation = "What shape do we want the control to be")
+    cmds.menuItem(label = "Full Circle")
+    cmds.menuItem(label = "Half Circle")
+    cmds.menuItem(label = "3D Circle")
+    cmds.menuItem(label = "Cube")
+    cmds.menuItem(label = "Pyramid")
+    cmds.menuItem(label = "Arrow Cross")
+    cmds.menuItem(label = "Root Arrows")
+    cmds.menuItem(label = "Up and Down Arrows")
 
     #should we parent the control to the bone right away?
-    parentControl = pm.checkBox("parentIt", l = "Parent Control", h = 20, ann = "Parent the Control we are creating?", v = 1)
+    parentControl = cmds.checkBox("parentIt", label = "Parent Control", height = 20, annotation = "Parent the Control we are creating?", value = True)
 
     sep3 = pm.separator(h = 5)
 
@@ -430,17 +509,18 @@ def CreateWindow():
     sep7 = cmds.separator(height = 5)
 
     functionName = cmds.textFieldGrp("ctrlFunction", label = "Slider / XY Panel Name = ")
+    currentPanel = cmds.textFieldGrp("curPanel", label = "Add control to this panel = " )
 
     slider = pm.button(label = "Create Left Right Slider", command = 'CreateSlider()')
     sliderUpDown = pm.button(label = "Create Up Down Slider", command = "CreateUpDownSlider()")
     xYPanel = pm.button(label = "Create XY Panel", command = 'CreateXYPanel()')
 
     #formating the UI
-    pm.formLayout(mainLayout, e = 1, attachForm = [
-       (title1, 'top', 5), (title1, 'left', 5),
-       (aName, 'left', 5), (aName, 'right', 5),
-       (bName, 'left', 5), (bName, 'right', 5), 
-       (sep1, 'left', 5), (sep1, 'right', 5),
+    cmds.formLayout(mainLayout, edit = 1, attachForm = [
+        (title1, 'top', 5), (title1, 'left', 5),
+        (aName, 'left', 5), (aName, 'right', 5),
+        (bName, 'left', 5), (bName, 'right', 5), 
+        (sep1, 'left', 5), (sep1, 'right', 5),
         (sideMenu, 'left', 5), (parentControl, 'right', 5), 
         (colorMenu, 'left', 5), (colorMenu, 'right', 5), 
         (shapeMenu, 'left', 5), (shapeMenu, 'right', 5),
@@ -456,7 +536,7 @@ def CreateWindow():
         (createControlPanelButton, 'left', 5), (createControlPanelButton, 'right', 5),
         (panelX, 'left', 5), (panelY, 'right', 5),
         (mergeButton, 'left', 5), (mergeButton, 'right', 5),
-        (functionName, 'left', 5), (functionName, 'right', 5), 
+        (functionName, 'left', 5), (currentPanel, 'right', 5), 
         (slider, 'left', 5), (slider, 'right', 5), 
         (xYPanel, 'left', 5), (xYPanel, 'right', 5),
         (sliderUpDown, 'left', 5), (sliderUpDown, 'right', 5)
@@ -481,7 +561,7 @@ def CreateWindow():
                     (panelY, 'top', 5, sep6),
                     (createControlPanelButton, 'top', 5, panelY ),
                     (mergeButton, 'top', 5, createControlPanelButton),
-                    (functionName, 'top', 5, mergeButton),
+                    (functionName, 'top', 5, mergeButton), (currentPanel, 'top', 5, mergeButton),
                     (slider, 'top', 5, functionName),
                     (sliderUpDown, 'top', 5, slider),
                     (xYPanel, 'top', 5, sliderUpDown)
